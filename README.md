@@ -1,6 +1,6 @@
 # AI-Driven Framework for Real-Time APT Detection
 
-## Abstract
+### Abstract
 
 Advanced Persistent Threats (APTs) are sophisticated cyberattacks that target critical infrastructures and sensitive data through stealthy, prolonged campaigns. This project proposes an AI-driven framework for real-time APT detection and mitigation by integrating threat intelligence, anomaly detection, and automated incident response. Leveraging datasets specific to APT activities, the system uses Isolation Forest and other machine learning models to identify malicious behaviors such as data exfiltration, DNS tunneling, lateral movement, and privilege escalation. The framework features a visual log dashboard, a web-based interface, and an automatic ticketing system for rapid response, enabling security teams to prioritize and remediate threats efficiently. By correlating external threat intelligence with internal network behavior, the system enhances detection accuracy for top APT campaigns and provides actionable insights to strengthen organizational cybersecurity posture.
 
