@@ -26,7 +26,7 @@ pip install psutil
 Open `agent.py` in a text editor and make two important changes:
 
 -   **`DASHBOARD_URL`**: If your ExfilSense dashboard is running on a different machine, change `localhost` to the IP address of the machine running the dashboard.
--   **`BEARER_TOKEN`**: **This is critical.** You MUST replace `"your_secret_token_here"` with the secret token you have set in the `.env` file of your Next.js project (the `ALERT_INGESTION_TOKEN` variable).
+-   **`BEARER_TOKEN`**: **This is critical.** You MUST replace `"secret_token_!@#$"` with the secret token you have set in the `.env` file of your Next.js project (the `ALERT_INGESTION_TOKEN` variable).
 
 ### 2. Run the Agent
 
@@ -44,7 +44,7 @@ Now, from your Debian **attacker** machine (or even from another terminal on the
 
 #### To Trigger a "FileStaging" Alert:
 
-Create a large archive file in the `/tmp` directory. This command creates a 15MB file.
+Create a large archive file in the `/tmp` directory. This command creates a 15MB file, which is above the agent's 10MB threshold.
 
 ```bash
 # Run this on the monitoring machine
