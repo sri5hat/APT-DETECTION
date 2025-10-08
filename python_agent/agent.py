@@ -10,8 +10,8 @@ from threading import Thread
 # If running on a different machine, replace 'localhost' with the appropriate IP address.
 DASHBOARD_URL = "http://localhost:9002/api/alerts/ingest"
 
-# IMPORTANT: This token MUST match the one in your .env file for the Next.js app.
-BEARER_TOKEN = "your_secret_token_here" 
+# IMPORTANT: This token MUST match the 'ALERT_INGESTION_TOKEN' in your .env file for the Next.js app.
+BEARER_TOKEN = "secret_token_!@#$%" 
 
 # --- Detection Logic ---
 
@@ -114,9 +114,10 @@ def send_alert(alert_payload):
 if __name__ == "__main__":
     print("--- Starting Simple APT Detection Agent ---")
     
-    if BEARER_TOKEN == "your_secret_token_here":
-        print("\n[CRITICAL] SECURITY WARNING: Please update the 'BEARER_TOKEN' in this script!")
-        print("             It must match the 'ALERT_INGESTION_TOKEN' in your .env file.\n")
+    if BEARER_TOKEN == "your_secret_token_here" or BEARER_TOKEN == "secret_token_!@#$%":
+        print("\n[INFO] Using default bearer token.")
+        if BEARER_TOKEN == "your_secret_token_here":
+             print("[CRITICAL] SECURITY WARNING: Please update the 'BEARER_TOKEN' in this script to match your '.env' file!")
     
     # Run watchers in separate threads so they don't block each other
     file_watcher_thread = Thread(target=watch_staging_directory, daemon=True)
