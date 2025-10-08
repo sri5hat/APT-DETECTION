@@ -9,11 +9,15 @@ export type MitreTactic =
   | 'TA0001' // Initial Access
   | 'TA0008' // Lateral Movement
   | 'TA0003' // Persistence
-  | 'TA0005' // Discovery
+  | 'TA0005' // Defense Evasion
   | 'TA0009' // Collection
   | 'TA0011' // Command and Control
   | 'TA0002' // Execution
-  | 'TA0007'; // Privilege Escalation
+  | 'TA0007' // Credential Access
+  | 'TA0040' // Impact
+  | 'TA0042' // Resource Hijacking
+  | 'TA0043'; // Network-based Effects
+  
 
 
 export type AlertType =
@@ -32,7 +36,7 @@ export interface Alert {
   host: string;
   alertType: AlertType;
   score: number;
-  mitreTactic: MitreTactic;
+  mitreTactic: string; // Allow any string for flexibility with ingested alerts
   srcIp: string;
   dstIp: string;
   evidence: string;

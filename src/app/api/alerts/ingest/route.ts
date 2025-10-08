@@ -21,7 +21,7 @@ const IngestAlertSchema = z.object({
         'FileAccess',
     ]),
     score: z.number().min(0).max(1),
-    mitreTactic: z.string().regex(/^TA\d{4}$/, 'Invalid MITRE Tactic ID'),
+    mitreTactic: z.string(),
     srcIp: z.string(),
     dstIp: z.string(),
     evidence: z.string(),
