@@ -25,9 +25,10 @@ To run the ExfilSense dashboard on your local machine, follow these steps:
     ```bash
     npm run dev
     ```
-    This will start the application in development mode with Turbopack for faster performanc
+    This will start the application in development mode with Turbopack for faster performance.
+
 3.  **View the Dashboard:**
-    Open your web browser and navigate to [http://localhost:9002](http://localhost:9002). The application will start with a simulated data exfiltration scenario running.
+    Open your web browser and navigate to **http://localhost:9002**. The application will start with a simulated data exfiltration scenario running.
 
 ## Integrating a Python Backend Agent
 
@@ -37,7 +38,7 @@ While this application simulates alerts, it is designed to receive real alerts f
 
 Your agent can send alerts by making a `POST` request to the `/api/alerts/ingest` endpoint.
 
-- **URL:** `http://<your-host>/api/alerts/ingest`
+- **URL:** `http://<your-host>:9002/api/alerts/ingest`
 - **Method:** `POST`
 - **Authentication:** `Authorization: Bearer <your_secret_token>`
 - **Body:** A JSON object matching the `Alert` structure.
