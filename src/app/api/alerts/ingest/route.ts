@@ -19,6 +19,8 @@ const IngestAlertSchema = z.object({
         'LateralMovement',
         'Beaconing',
         'FileAccess',
+        'NetcatExecution',
+        'ShortTcpConnectionBurst'
     ]),
     score: z.number().min(0).max(1),
     mitreTactic: z.string(),

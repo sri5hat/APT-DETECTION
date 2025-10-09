@@ -28,7 +28,9 @@ export type AlertType =
   | 'ProcessAnomaly'
   | 'LateralMovement'
   | 'Beaconing'
-  | 'FileAccess';
+  | 'FileAccess'
+  | 'NetcatExecution'
+  | 'ShortTcpConnectionBurst';
 
 export interface Alert {
   id: string;

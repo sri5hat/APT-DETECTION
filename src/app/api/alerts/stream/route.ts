@@ -3,6 +3,7 @@ import { logEmitter } from '@/lib/log-emitter';
 
 // This endpoint is now driven by events from the log generator
 export async function GET() {
+  const abortController = new AbortController();
   const stream = new ReadableStream({
     start(controller) {
       const handler = (alert: Alert) => {
@@ -13,11 +14,14 @@ export async function GET() {
       logEmitter.on('alert', handler);
 
       // Clean up the listener when the client closes the connection
-      controller.signal.addEventListener('abort', () => {
+      abortController.signal.addEventListener('abort', () => {
         logEmitter.off('alert', handler);
         controller.close();
       });
     },
+    cancel() {
+      abortController.abort();
+    }
   });
 
   return new Response(stream, {
