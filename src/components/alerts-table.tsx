@@ -104,8 +104,14 @@ export function AlertsTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {alerts.map((alert) => (
-            <TableRow key={alert.id}>
+          {alerts.map((alert, idx) => (
+            <TableRow key={alert.id ?? `${alert.host ?? 'h'}-${alert.time ?? idx}-${idx}`}>
+              {/** normalize score to avoid runtime errors when undefined */}
+              {(() => {
+                const scoreNum = typeof alert.score === 'number' ? alert.score : 0;
+                // attach to row via data-attribute not necessary; use constants below
+                return null;
+              })()}
               <TableCell className="whitespace-nowrap">
                 {isClient ? new Date(alert.time).toLocaleString() : ''}
               </TableCell>
@@ -114,9 +120,15 @@ export function AlertsTable({
                 <Badge variant="outline">{alert.alertType}</Badge>
               </TableCell>
               <TableCell>
-                <Badge variant={getScoreBadgeVariant(alert.score)}>
-                  {alert.score.toFixed(2)}
-                </Badge>
+                {(() => {
+                  const scoreNum = typeof alert.score === 'number' ? alert.score : 0;
+                  const scoreDisplay = typeof alert.score === 'number' ? alert.score.toFixed(2) : '—';
+                  return (
+                    <Badge variant={getScoreBadgeVariant(scoreNum)}>
+                      {scoreDisplay}
+                    </Badge>
+                  );
+                })()}
               </TableCell>
               <TableCell>
                  <a

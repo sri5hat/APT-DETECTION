@@ -1,5 +1,6 @@
 // This is a server-side file!
 import { logEmitter } from '@/lib/log-emitter';
+import { addAlert } from '@/lib/alerts-store';
 import { type Alert } from '@/lib/types';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -68,8 +69,27 @@ export async function POST(request: Request) {
         status: 'New',
     };
 
-    // 4. Emit the alert to all connected clients
-    logEmitter.emit('alert', newAlert);
+    // 4. Store + Emit the alert to all connected clients
+    try {
+        addAlert(newAlert);
+    } catch (err) {
+        console.warn('[ingest] addAlert failed:', err);
+    }
+    console.log('[ingest] Emitting alert to logEmitter:', newAlert.id, newAlert.alertType, newAlert.host);
+    try {
+        logEmitter.emit('alert', newAlert);
+    } catch (err) {
+        console.error('[ingest] Error emitting alert:', err);
+    }
+
+    // Persist a simple audit log for ingested alerts (newline-delimited JSON)
+    try {
+        const fs = require('fs');
+        const line = JSON.stringify({ t: new Date().toISOString(), alert: newAlert }) + '\n';
+        fs.appendFileSync('/tmp/alerts_ingest.log', line, { encoding: 'utf8' });
+    } catch (err) {
+        console.warn('[ingest] Failed to write ingest log:', err);
+    }
 
     // 5. Send a success response
     return NextResponse.json({ message: 'Alert ingested successfully.', alertId: newAlert.id }, { status: 202 });

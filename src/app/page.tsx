@@ -63,6 +63,27 @@ export default function DashboardPage() {
     setIsMounted(true);
   }, []);
 
+  // Fetch recent alerts from server store on mount to bootstrap the UI
+  useEffect(() => {
+    async function fetchAlerts() {
+      try {
+        const res = await fetch('/api/alerts/list');
+        if (!res.ok) return;
+        const data = await res.json();
+        if (Array.isArray(data.alerts)) {
+          setAlerts((prev) => {
+            const existingIds = new Set(prev.map((a) => a.id));
+            const merged = [...data.alerts.filter((a: Alert) => !existingIds.has(a.id)), ...prev];
+            return merged.slice(0, 500);
+          });
+        }
+      } catch (e) {
+        // ignore fetch errors
+      }
+    }
+    fetchAlerts();
+  }, []);
+
   useEffect(() => {
     if (!isLive || !isMounted) {
       return;
@@ -92,17 +113,26 @@ export default function DashboardPage() {
   }, []);
 
   const filteredAndSortedAlerts = useMemo(() => {
-    let filtered = alerts.filter(
-      (alert) =>
-        (alert.host.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          alert.srcIp.includes(searchTerm) ||
-          alert.dstIp.includes(searchTerm) ||
-          alert.evidence.toLowerCase().includes(searchTerm.toLowerCase())) &&
-        alert.score >= filters.score &&
-        (filters.tactics.length === 0 ||
-          filters.tactics.includes(alert.mitreTactic)) &&
+    const lowerSearch = searchTerm.toLowerCase();
+    let filtered = alerts.filter((alert) => {
+      const host = (alert.host ?? '').toString();
+      const evidence = (alert.evidence ?? '').toString();
+      const srcIp = (alert.srcIp ?? '').toString();
+      const dstIp = (alert.dstIp ?? '').toString();
+
+      const matchesSearch =
+        (host.toLowerCase().includes(lowerSearch) ||
+          srcIp.includes(searchTerm) ||
+          dstIp.includes(searchTerm) ||
+          evidence.toLowerCase().includes(lowerSearch));
+
+      return (
+        matchesSearch &&
+        (typeof alert.score === 'number' ? alert.score : 0) >= filters.score &&
+        (filters.tactics.length === 0 || filters.tactics.includes(alert.mitreTactic)) &&
         (filters.types.length === 0 || filters.types.includes(alert.alertType))
-    );
+      );
+    });
 
     if (sortConfig !== null) {
       filtered.sort((a, b) => {
